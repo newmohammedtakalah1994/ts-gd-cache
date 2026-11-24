@@ -1,0 +1,192 @@
+{
+ "summary": {
+  "days": 21,
+  "requests": 207646002,
+  "unique_objects": 18394481,
+  "one_hit_wonders_pct": 55.69736379080226,
+  "max_hit_ratio_infinite_cache_pct": 91.14142298776356,
+  "top1pct_objects_request_share": 55.52250122301897,
+  "top10pct_objects_request_share": 83.43394880292469,
+  "zipf_alpha": 0.7433410857023965,
+  "objects_active_1_day_pct": 59.279889440751276,
+  "objects_active_all_days_pct": 1.5843284733067489,
+  "traffic_acf_lag24": 0.860543110064569,
+  "traffic_acf_lag168": 0.5675555029653008,
+  "top1000_jaccard_consecutive_days_mean": 0.5253749242785878,
+  "topK": 5000,
+  "topK_request_share_pct": 16.522782364959767,
+  "topK_acf24_median": 0.47166507377574807,
+  "topK_daily_periodic_pct": 75.68,
+  "topK_weekly_periodic_pct": 40.98
+ },
+ "per_day": [
+  {
+   "day": 0,
+   "requests": 9826681,
+   "unique": 2768652,
+   "GB": 322.006606605,
+   "mean_size_KB": 32.76860280749929,
+   "median_tfb_ms": 0.2110000103712082
+  },
+  {
+   "day": 1,
+   "requests": 10171545,
+   "unique": 2674946,
+   "GB": 319.176496112,
+   "mean_size_KB": 31.379352508591367,
+   "median_tfb_ms": 0.21199999749660492
+  },
+  {
+   "day": 2,
+   "requests": 10978846,
+   "unique": 2844612,
+   "GB": 356.077950863,
+   "mean_size_KB": 32.43309459509679,
+   "median_tfb_ms": 0.20900000631809235
+  },
+  {
+   "day": 3,
+   "requests": 10937105,
+   "unique": 3002226,
+   "GB": 354.943335048,
+   "mean_size_KB": 32.453134083288035,
+   "median_tfb_ms": 0.21799999475479126
+  },
+  {
+   "day": 4,
+   "requests": 10544510,
+   "unique": 3122508,
+   "GB": 340.747536931,
+   "mean_size_KB": 32.3151608686416,
+   "median_tfb_ms": 0.2240000069141388
+  },
+  {
+   "day": 5,
+   "requests": 10488605,
+   "unique": 3127349,
+   "GB": 346.957845812,
+   "mean_size_KB": 33.079503500417836,
+   "median_tfb_ms": 0.2240000069141388
+  },
+  {
+   "day": 6,
+   "requests": 10110745,
+   "unique": 2842757,
+   "GB": 338.925432008,
+   "mean_size_KB": 33.52131143728776,
+   "median_tfb_ms": 0.22100000083446503
+  },
+  {
+   "day": 7,
+   "requests": 11323959,
+   "unique": 3492132,
+   "GB": 365.981180022,
+   "mean_size_KB": 32.31918978353772,
+   "median_tfb_ms": 0.22299998998641968
+  },
+  {
+   "day": 8,
+   "requests": 10227163,
+   "unique": 2815403,
+   "GB": 334.156977542,
+   "mean_size_KB": 32.67347724310251,
+   "median_tfb_ms": 0.21699999272823334
+  },
+  {
+   "day": 9,
+   "requests": 10711308,
+   "unique": 2644108,
+   "GB": 351.137649248,
+   "mean_size_KB": 32.781958024920954,
+   "median_tfb_ms": 0.21799999475479126
+  },
+  {
+   "day": 10,
+   "requests": 13464192,
+   "unique": 2738875,
+   "GB": 415.922052327,
+   "mean_size_KB": 30.890977514803712,
+   "median_tfb_ms": 0.2070000022649765
+  },
+  {
+   "day": 11,
+   "requests": 8851202,
+   "unique": 2282644,
+   "GB": 318.028384642,
+   "mean_size_KB": 35.93053063775971,
+   "median_tfb_ms": 0.21699999272823334
+  },
+  {
+   "day": 12,
+   "requests": 8990497,
+   "unique": 2283271,
+   "GB": 330.904956975,
+   "mean_size_KB": 36.806080573187444,
+   "median_tfb_ms": 0.21699999272823334
+  },
+  {
+   "day": 13,
+   "requests": 8652134,
+   "unique": 2278798,
+   "GB": 306.284840307,
+   "mean_size_KB": 35.39991871450442,
+   "median_tfb_ms": 0.21699999272823334
+  },
+  {
+   "day": 14,
+   "requests": 8650856,
+   "unique": 2431709,
+   "GB": 323.570401616,
+   "mean_size_KB": 37.40328143434592,
+   "median_tfb_ms": 0.2199999988079071
+  },
+  {
+   "day": 15,
+   "requests": 8424441,
+   "unique": 2102657,
+   "GB": 286.532454744,
+   "mean_size_KB": 34.01204361737473,
+   "median_tfb_ms": 0.2160000056028366
+  },
+  {
+   "day": 16,
+   "requests": 9426727,
+   "unique": 2432618,
+   "GB": 324.777425596,
+   "mean_size_KB": 34.452830297939045,
+   "median_tfb_ms": 0.21799999475479126
+  },
+  {
+   "day": 17,
+   "requests": 9172811,
+   "unique": 2490748,
+   "GB": 321.959343801,
+   "mean_size_KB": 35.099310756648094,
+   "median_tfb_ms": 0.21699999272823334
+  },
+  {
+   "day": 18,
+   "requests": 9043291,
+   "unique": 2346808,
+   "GB": 325.99341081,
+   "mean_size_KB": 36.04809474891386,
+   "median_tfb_ms": 0.21400000154972076
+  },
+  {
+   "day": 19,
+   "requests": 8911888,
+   "unique": 2246660,
+   "GB": 321.285725676,
+   "mean_size_KB": 36.051364837170304,
+   "median_tfb_ms": 0.21299999952316284
+  },
+  {
+   "day": 20,
+   "requests": 8737496,
+   "unique": 2269608,
+   "GB": 316.474910636,
+   "mean_size_KB": 36.22032108924571,
+   "median_tfb_ms": 0.2160000056028366
+  }
+ ]
+}

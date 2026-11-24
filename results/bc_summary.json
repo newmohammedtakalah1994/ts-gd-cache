@@ -1,0 +1,102 @@
+{
+ "files": {
+  "001": {
+   "group": "A",
+   "rows": 2197115,
+   "first": "2005-04-12T21:03:45",
+   "last": "2005-05-06T13:45:28",
+   "full_days": [
+    "2005-04-28",
+    "2005-04-29",
+    "2005-04-30",
+    "2005-05-01",
+    "2005-05-02",
+    "2005-05-03"
+   ],
+   "real_hit_ratio_all_pct": 42.5504809716378
+  },
+  "004": {
+   "group": "A",
+   "rows": 193705,
+   "first": "2005-04-05T18:27:21",
+   "last": "2005-05-06T23:46:13",
+   "full_days": [
+    "2005-04-06",
+    "2005-04-07",
+    "2005-04-08",
+    "2005-04-09",
+    "2005-04-10"
+   ],
+   "real_hit_ratio_all_pct": 52.86698846183629
+  },
+  "002": {
+   "group": "B",
+   "rows": 1952574,
+   "first": "2005-04-12T20:10:20",
+   "last": "2005-05-06T23:45:15",
+   "full_days": [
+    "2005-04-28",
+    "2005-04-29",
+    "2005-05-05",
+    "2005-05-06"
+   ],
+   "real_hit_ratio_all_pct": 51.990654387490565
+  },
+  "003": {
+   "group": "B",
+   "rows": 3787196,
+   "first": "2005-04-30T17:16:14",
+   "last": "2005-05-06T10:46:15",
+   "full_days": [
+    "2005-05-01",
+    "2005-05-02",
+    "2005-05-03",
+    "2005-05-04",
+    "2005-05-05"
+   ],
+   "real_hit_ratio_all_pct": 51.04821614724984
+  }
+ },
+ "groups": {
+  "A": {
+   "files": [
+    "001",
+    "004"
+   ],
+   "cacheable_requests": 1395948,
+   "duplicate_rows": 55586,
+   "unique_objects": 343437,
+   "one_hit_wonders_pct": 63.98029332890749,
+   "max_hit_ratio_infinite_cache_pct": 75.3975792794574,
+   "real_proxy_hit_ratio_on_cacheable_pct": 74.30326917621574,
+   "top1pct_objects_request_share": 37.48943370383424,
+   "top10pct_objects_request_share": 66.68801416671681,
+   "zipf_alpha": 0.9436031588517957,
+   "longest_continuous_hours": 164,
+   "traffic_acf_lag24": 0.528278504445296,
+   "topK": 2000,
+   "topK_acf24_median": 0.21339361055683376,
+   "topK_daily_periodic_pct": 30.75
+  },
+  "B": {
+   "files": [
+    "002",
+    "003"
+   ],
+   "cacheable_requests": 3798111,
+   "duplicate_rows": 139759,
+   "unique_objects": 843534,
+   "one_hit_wonders_pct": 63.78059449885838,
+   "max_hit_ratio_infinite_cache_pct": 77.79069648043462,
+   "real_proxy_hit_ratio_on_cacheable_pct": 77.62548277288369,
+   "top1pct_objects_request_share": 41.63195862364212,
+   "top10pct_objects_request_share": 69.69501417941709,
+   "zipf_alpha": 0.922693284795789,
+   "longest_continuous_hours": 202,
+   "traffic_acf_lag24": 0.6217209214779374,
+   "topK": 2000,
+   "topK_acf24_median": 0.3956298603890369,
+   "topK_daily_periodic_pct": 65.60000000000001
+  }
+ }
+}
