@@ -1,6 +1,6 @@
 """Run libCacheSim's official implementations on our traces with our protocol (warm-up, cache sizes).
 Resumable; appends to results/sim_libcachesim.jsonl.  usage: python scripts/run_libcachesim.py <cachesim_bin> <parallel> trace.bin ..."""
-import sys, os, re, json, subprocess, time
+import sys, os, re, json, subprocess, time, signal, threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 BIN, PAR, traces = sys.argv[1], int(sys.argv[2]), sys.argv[3:]
 OUT = 'results/sim_libcachesim.jsonl'
@@ -21,20 +21,55 @@ for tr in traces:
 print(len(jobs), 'runs to do', flush=True)
 pat = re.compile(r'(\d+) req, miss ratio ([\d.]+)(?:, byte miss ratio ([\d.]+))?.*throughput ([\d.]+) MQPS')
 def run(j):
-    tr, name, a, p, cap, warm = j; t0 = time.time()
+    """Run one simulation. The simulator's output is read while it runs and only its last 2,000 characters
+    are kept, so memory use stays small even when libCacheSim prints a very large log."""
+    tr, name, a, p, cap, warm = j; t0 = time.time(); limit = TIMEOUT.get(name, 3600)
     d = dict(trace=name, alg=a, cache_pct=p, cache_bytes=cap)
+    cmd = [BIN, tr, 'oracleGeneral', a, str(cap), '--warmup-sec', str(warm), '--num-thread', '1']
+    if sys.platform == 'darwin' and os.path.exists('/usr/bin/time'): cmd = ['/usr/bin/time', '-l'] + cmd   # macOS: peak memory in bytes
+    elif os.path.exists('/usr/bin/time'): cmd = ['/usr/bin/time', '-v'] + cmd                              # Linux / WSL: peak memory in kB
+    st = {'match': None, 'rss': None, 'stdout': '', 'stderr': ''}
+    def consume(stream, kind):   # read line by line; keep only a short tail and the parsed values
+        try:
+            for chunk in iter(lambda: stream.readline(65536), ''):
+                st[kind] = (st[kind] + chunk)[-2000:]
+                if kind == 'stdout':
+                    m = pat.search(chunk)
+                    if m: st['match'] = m.groups()   # the final summary is the last match
+                else:
+                    mm = re.search(r'(\d+)\s+maximum resident set size', chunk)
+                    if mm: st['rss'] = round(int(mm.group(1)) / 2**30, 2)
+                    ml = re.search(r'Maximum resident set size \(kbytes\):\s*(\d+)', chunk)
+                    if ml: st['rss'] = round(int(ml.group(1)) / 2**20, 2)
+        finally:
+            stream.close()
+    print('START %s %s cache=%g%%' % (name, a, 100 * p), flush=True)
     try:
-        cmd = [BIN, tr, 'oracleGeneral', a, str(cap), '--warmup-sec', str(warm), '--num-thread', '1']
-        if sys.platform == 'darwin' and os.path.exists('/usr/bin/time'): cmd = ['/usr/bin/time', '-l'] + cmd
-        pr = subprocess.run(cmd, capture_output=True, text=True, timeout=TIMEOUT.get(name, 3600))
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, errors='replace', start_new_session=True)
+    except OSError as e:
+        d['error'] = str(e); return d
+    readers = [threading.Thread(target=consume, args=(proc.stdout, 'stdout')), threading.Thread(target=consume, args=(proc.stderr, 'stderr'))]
+    for t in readers: t.start()
+    timed_out = False
+    try:
+        proc.wait(timeout=limit)
     except subprocess.TimeoutExpired:
-        d.update(error='timeout after %d s' % TIMEOUT.get(name, 3600), wall_seconds=round(time.time() - t0, 1)); return d
-    m = pat.search(pr.stdout); d['wall_seconds'] = round(time.time() - t0, 1)
-    mm = re.search(r'(\d+)\s+maximum resident set size', pr.stderr)
-    if mm: d['max_rss_gb'] = round(int(mm.group(1)) / 2**30, 2)   # bytes on macOS
-    if pr.returncode != 0 and not m: d['returncode'] = pr.returncode
-    if m: d.update(requests=int(m.group(1)), hit_ratio=1 - float(m.group(2)), byte_hit_ratio=1 - float(m.group(3)) if m.group(3) else None, throughput_mqps=float(m.group(4)))
-    else: d.update(error=(pr.stdout + pr.stderr)[-400:])
+        timed_out = True
+        try: os.killpg(proc.pid, signal.SIGKILL)   # kill the simulator and its /usr/bin/time wrapper
+        except ProcessLookupError: pass
+        proc.wait()
+    for t in readers: t.join()
+    d['wall_seconds'] = round(time.time() - t0, 1)
+    if st['rss'] is not None: d['max_rss_gb'] = st['rss']   # GiB
+    if timed_out:
+        d['error'] = 'timeout after %d s' % limit; return d
+    if proc.returncode != 0:
+        d['returncode'] = proc.returncode
+        if proc.returncode in (-9, 137): d['killed'] = 'SIGKILL (possibly out of memory)'
+        d['error'] = 'exit code %d: %s' % (proc.returncode, st['stderr'][-400:]); return d
+    m = st['match']
+    if m: d.update(requests=int(m[0]), hit_ratio=1 - float(m[1]), byte_hit_ratio=1 - float(m[2]) if m[2] else None, throughput_mqps=float(m[3]))
+    else: d['error'] = 'no summary line found: ' + (st['stdout'] + st['stderr'])[-400:]
     return d
 # order jobs: Blue Coat first, and within a trace the fast algorithms first
 jobs.sort(key=lambda j: (j[1] != 'bluecoat_B', ALGS.index(j[2]), j[3]))

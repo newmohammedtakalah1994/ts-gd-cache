@@ -19,9 +19,10 @@ every 6 hours on the last 3 days of samples whose label is already known, so it 
 | LRU | 13.7 | 28.2 | 37.2 | 61.9 | 71.8 |
 | Belady-Size (offline bound) | 34.5 | 52.0 | 60.5 | 79.3 | 85.7 |
 
-TS-GD closes 21–25% of the gap between GDSF and Belady-Size at every cache size. On a 10% spatial sample of the same
-trace it has the highest hit ratio of all compared policies, including LRB, GL-Cache, S3-FIFO and SIEVE from
-libCacheSim, at every size; LRB and the FIFO family have a higher byte hit ratio. Full tables: `results/main_results.md`
+TS-GD closes 21–25% of the gap between GDSF and Belady-Size at every cache size. It also has the highest hit ratio of
+all compared policies, including LRB, GL-Cache, S3-FIFO, SIEVE and libCacheSim's own GDSF, at every size, both on the
+full trace and on a 10% spatial sample; LRB (from a 0.5% cache) and S3-FIFO (at 0.1%) have a higher byte hit ratio, but
+a full-trace run of LRB takes 3.1–5.3 hours, against 17–21 minutes for the other policies. Full tables: `results/main_results.md`, `results/libcachesim_full.md`
 and the JSON-lines files in `results/` (the reference outputs of all runs).
 
 ## Repository layout
@@ -39,7 +40,7 @@ and the JSON-lines files in `results/` (the reference outputs of all runs).
 
 - A C++17 compiler (`clang++` on macOS, `g++` on Linux) and `make`
 - Python 3.10+ with `pip install -r requirements.txt` (numpy, pandas, matplotlib, scikit-learn)
-- Memory: 16 GB is enough for everything except libCacheSim on the full Wikipedia trace
+- Memory: 16 GB is enough for everything (libCacheSim on the full Wikipedia trace peaks at about 7 GB)
 - Disk: about 15 GB for the processed traces
 
 ## Quick start
@@ -93,9 +94,15 @@ python3 scripts/to_oracle_general.py data/processed/wiki_s10.bin
 python3 scripts/run_libcachesim.py tools/libCacheSim/_build/bin/cachesim 4 data/processed/bluecoat_B.bin data/processed/wiki_s10.bin
 ```
 
-On the full Wikipedia trace libCacheSim needs more than 16 GB of memory, so the comparison with these algorithms is
-reported on the 10% sample; the improvement of TS-GD over GDSF is the same on the sample and on the full trace
-(within 0.1 point at every size).
+On the full Wikipedia trace we ran GDSF, S3-FIFO, SIEVE, GL-Cache and LRB, one run at a time:
+
+```bash
+python3 scripts/to_oracle_general.py data/processed/wiki_full.bin
+LCS_ALGS=gdsf,s3fifo,sieve,GLCache,lrb python3 scripts/run_libcachesim.py tools/libCacheSim/_build/bin/cachesim 1 data/processed/wiki_full.bin
+```
+
+These runs were made on an x86-64 laptop with 32 GB of memory (Ubuntu under WSL2); the peak memory of a run was
+4.8–7.2 GB. The full-trace results are in `results/sim_libcachesim.jsonl` (`"trace": "wiki_full"`).
 
 ## Citation
 
